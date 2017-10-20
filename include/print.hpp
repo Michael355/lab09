@@ -13,7 +13,7 @@
 		void print(const std::string& text, std::ostream& out = std::cout);
 	\endcode
 */
-void print( const std::string& text, std::ostream& out = std::cout);
+void print(const std::string& text, std::ostream& out = std::cout);
 /*!
 	\brief Функция копирования
 	\param[in] text Копирование текстовой строки
@@ -26,4 +26,4 @@ void print( const std::string& text, std::ostream& out = std::cout);
 		void print(const std::string& text, std::ofstream& out);
 	\endcode
 */
-void print( const std::string& text, std::ofstream& out); 
+void print(const std::string& text, std::ofstream& out);
