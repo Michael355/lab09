@@ -12,83 +12,85 @@ $ open https://help.github.com/articles/creating-releases/
 
 ## Tasks
 
-- [ ] 1. Создать публичный репозиторий с названием **lab09** на сервисе **GitHub**
-- [ ] 2. Ознакомиться со ссылками учебного материала
-- [ ] 3. Получить токен для доступа к репозиториям сервиса **GitHub**
-- [ ] 4. Сгенерировать GPG ключ и добавить его к аккаунту сервиса **GitHub**
-- [ ] 5. Выполнить инструкцию учебного материала
-- [ ] 6. Составить отчет и отправить ссылку личным сообщением в **Slack**
+- [X] 1. Создать публичный репозиторий с названием **lab09** на сервисе **GitHub**
+- [X] 2. Ознакомиться со ссылками учебного материала
+- [X] 3. Получить токен для доступа к репозиториям сервиса **GitHub**
+- [X] 4. Сгенерировать GPG ключ и добавить его к аккаунту сервиса **GitHub**
+- [X] 5. Выполнить инструкцию учебного материала
+- [X] 6. Составить отчет и отправить ссылку личным сообщением в **Slack**
 
 ## Tutorial
 
+## Tutorial
+Установим значения GITHUB_USERNAME и GITHUB_TOKEN
 ```ShellSession
-$ export GITHUB_TOKEN=<полученный_токен>
-$ export GITHUB_USERNAME=<имя_пользователя>
+$ export GITHUB_TOKEN=XxX # Установка значения полученного токена
+$ export GITHUB_USERNAME=Michael355 # Установка значения GITHUB_USERNAME
 $ alias gsed=sed # for *-nix system
 ```
-
+Cкачиваем предыдущую лабораторную работу в папку lab09.
 ```ShellSession
-$ cd ${GITHUB_USERNAME}/workspace
-$ pushd .
-$ source scripts/activate
-$ go get github.com/aktau/github-release
+$ git clone https://github.com/Michael355/lab08 lab09 # Загружаем гит в папку lab09
+$ cd lab09 # Переходим в папку lab09
+$ git remote remove origin # Очищаем старый путь загрузки гита
+$ git remote add origin https://github.com/Michael355/lab09 # Устанавливаем новый путь загрузки гита
+```
+В файле README.md в строке заменяем lab08 на lab09
+```ShellSession
+$ gsed -i 's/lab08/lab09/g' README.md # Заменяем lab08 на lab09
 ```
 
 ```ShellSession
-$ git clone https://github.com/${GITHUB_USERNAME}/lab09 projects/lab09
-$ cd projects/lab09
-$ git remote remove origin
-$ git remote add origin https://github.com/${GITHUB_USERNAME}/lab09
-```
-
+$ cmake -H. -B_build -DCPACK_GENERATOR="TGZ" # Задаем архивирование в tar.gz
+$ cmake --build _build --target package # Архивируем
+``` 
+Авторизация travis и подключение lab09 к travis.
 ```ShellSession
-$ gsed -i 's/lab09/lab09/g' README.md
+$ travis login --auto # Процесс авторизации без токена
+$ travis enable # Подключаем lab09 к travis'у
 ```
-
 ```ShellSession
-$ cmake -H. -B_build -DCPACK_GENERATOR="TGZ"
-$ cmake --build _build --target package
+$ git tag -s v0.1.0.0 # Подписываем v0.1.0.0
+$ git tag -v v0.1.0.0 # Проверяем подписку
+$ git push origin master --tags # Пушим изменения под v0.1.0.0
 ```
-
 ```ShellSession
-$ travis login --auto
-$ travis enable
-```
-
-```ShellSession
-$ git tag -s v0.1.0.0
-$ git tag -v v0.1.0.0
-$ git push origin master --tags
-```
-
-```ShellSession
-$ github-release --version
-$ github-release info -u ${GITHUB_USERNAME} -r lab09
-$ github-release release \
+$ github-release --version # Версия github-release
+$ github-release info -u ${GITHUB_USERNAME} -r lab09 # Информация о релизе lab09
+$ github-release release \ # Пишем информацию о релизе
     --user ${GITHUB_USERNAME} \
     --repo lab09 \
     --tag v0.1.0.0 \
     --name "libprint" \
     --description "my first release"
 ```
-
+Устанавливаем две переменных PACKAGE_OS и PACKAGE_ARCH, загружаем релиз на сервер.
 ```ShellSession
-$ export PACKAGE_OS=`uname -s` PACKAGE_ARCH=`uname -m` 
-$ export PACKAGE_FILENAME=print-${PACKAGE_OS}-${PACKAGE_ARCH}.tar.gz
-$ github-release upload \
+$ export PACKAGE_OS=`uname -s` PACKAGE_ARCH=`uname -m`  # Переменные окружений PACKAGE_OS и PACKAGE_ARCH 
+$ export PACKAGE_FILENAME=print-${PACKAGE_OS}-${PACKAGE_ARCH}.tar.gz # Переменная окружения PACKAGE_FILENAME
+$ github-release upload \ # Загружаем релиз на GitHub
     --user ${GITHUB_USERNAME} \
     --repo lab09 \
     --tag v0.1.0.0 \
     --name "${PACKAGE_FILENAME}" \
     --file _build/*.tar.gz
 ```
-
 ```ShellSession
-$ github-release info -u ${GITHUB_USERNAME} -r lab09
-$ wget https://github.com/${GITHUB_USERNAME}/lab09/releases/download/v0.1.0.0/${PACKAGE_FILENAME}
-$ tar -ztf ${PACKAGE_FILENAME}
+$ github-release info -u ${GITHUB_USERNAME} -r lab09 # Обновленная информация о релизе lab09
+$ wget https://github.com/${GITHUB_USERNAME}/lab09/releases/download/v0.1.0.0/${PACKAGE_FILENAME} # Скачиваем файл
+$ tar -ztf ${PACKAGE_FILENAME} # Распаковываем файл
 ```
-
+## Report
+```ShellSession
+$ cd ~/workspace/labs/
+$ export LAB_NUMBER=09
+$ git clone https://github.com/tp-labs/lab${LAB_NUMBER} tasks/lab${LAB_NUMBER}
+$ mkdir reports/lab${LAB_NUMBER}
+$ cp tasks/lab${LAB_NUMBER}/README.md reports/lab${LAB_NUMBER}/REPORT.md
+$ cd reports/lab${LAB_NUMBER}
+$ edit REPORT.md
+$ gistup -m "lab${LAB_NUMBER}"
+```
 ## Report
 
 ```ShellSession
